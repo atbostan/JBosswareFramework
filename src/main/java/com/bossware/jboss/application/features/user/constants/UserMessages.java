@@ -1,6 +1,6 @@
 package com.bossware.jboss.application.features.user.constants;
 
-public class UserConstants {
+public class UserMessages {
 
     //region User Security Constants
     public static final String ACCOUNT_LOCKED = "Your account has been locked." +

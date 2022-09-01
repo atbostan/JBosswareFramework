@@ -1,4 +1,4 @@
-package com.bossware.jboss.core.configurations.api;
+package com.bossware.jboss.core.swagger.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
