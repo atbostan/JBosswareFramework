@@ -1,10 +1,9 @@
 package com.bossware.jboss.core.security.configurations;
 
 import com.bossware.jboss.core.security.constants.SecurityConstants;
-import com.bossware.jboss.core.security.filters.JWTAuthFilter;
+import com.bossware.jboss.core.security.filters.JWTAuthorizationFilter;
 import com.bossware.jboss.core.security.utils.JWTAccessDeniedHandler;
 import com.bossware.jboss.core.security.utils.JWTAuthEntryPoint;
-import com.bossware.jboss.domain.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private JWTAuthFilter jwtAuthorizationFilter;
+    private JWTAuthorizationFilter jwtAuthorizationFilter;
 
     @Autowired
     private JWTAuthEntryPoint jwtAuthEntryPoint;

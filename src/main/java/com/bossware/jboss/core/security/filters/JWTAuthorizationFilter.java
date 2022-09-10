@@ -1,6 +1,5 @@
 package com.bossware.jboss.core.security.filters;
 
-import com.bossware.jboss.core.security.constants.SecurityConstants;
 import com.bossware.jboss.core.security.utils.JWTProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,11 +20,11 @@ import static  com.bossware.jboss.core.security.constants.SecurityConstants.*;
 
 
 @Component
-public class JWTAuthFilter extends OncePerRequestFilter {
+public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     private JWTProvider jwtProvider;
 
-    public JWTAuthFilter(JWTProvider jwtProvider) {
+    public JWTAuthorizationFilter(JWTProvider jwtProvider) {
         this.jwtProvider = jwtProvider;
     }
     @Override
