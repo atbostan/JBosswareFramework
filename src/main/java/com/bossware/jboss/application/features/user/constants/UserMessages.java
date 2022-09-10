@@ -17,6 +17,16 @@ public class UserMessages {
 
     public static final String NOT_ENOUGH_PERMISSION = "You don't have enough permission.";
 
+    public static final String FORBIDDEN_MESSAGE = "You need to login to access this page";
+
+    public static final String ACCESS_DENIED_MESSAGE = "You do not have permission to access this page";
+
+
+    //endregion
+
+    //region User Data Exceptions
+
+    public static final String USER_NOT_FOUND = "User not found by specified information by given you";
     //endregion
 
 

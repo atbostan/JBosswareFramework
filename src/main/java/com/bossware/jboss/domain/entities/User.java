@@ -112,8 +112,8 @@ public class User extends JBossEntityBase {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        User user = (User) o;
-        return isActive == user.isActive && isNotLocked == user.isNotLocked && name.equals(user.name) && lastName.equals(user.lastName) && userName.equals(user.userName) && password.equals(user.password) && email.equals(user.email) && Objects.equals(lastLoginDate, user.lastLoginDate) && Objects.equals(lastLoginDateDisplay, user.lastLoginDateDisplay);
+        User User = (User) o;
+        return isActive == User.isActive && isNotLocked == User.isNotLocked && name.equals(User.name) && lastName.equals(User.lastName) && userName.equals(User.userName) && password.equals(User.password) && email.equals(User.email) && Objects.equals(lastLoginDate, User.lastLoginDate) && Objects.equals(lastLoginDateDisplay, User.lastLoginDateDisplay);
     }
 
     @Override

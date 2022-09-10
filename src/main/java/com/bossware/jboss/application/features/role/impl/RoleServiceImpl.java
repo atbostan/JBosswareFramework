@@ -1,9 +1,8 @@
-package com.bossware.jboss.application.features.user.impl;
+package com.bossware.jboss.application.features.role.impl;
 
 import com.bossware.jboss.application.base.ServiceGenericBase;
 import com.bossware.jboss.application.features.role.dtos.RoleRequestDto;
 import com.bossware.jboss.application.features.role.dtos.RoleResponseDto;
-import com.bossware.jboss.application.features.user.dtos.UserResponseDto;
 import com.bossware.jboss.core.mappers.RoleSourceDestinationMapper;
 import com.bossware.jboss.domain.entities.Role;
 import com.bossware.jboss.domain.entities.User;
@@ -47,13 +46,13 @@ public class RoleServiceImpl implements ServiceGenericBase<RoleRequestDto , Role
     @Override
     public ResponseEntity<RoleResponseDto> update(long id, RoleRequestDto roleRequestDto) {
         Role role= roleRepository.findById(id).get();
-        User user = userRepository.findById(roleRequestDto.getUserId()).get();
+        User User = userRepository.findById(roleRequestDto.getUserId()).get();
         if(roleRequestDto.getRoleName()!=null) {
             role.setRoleName(roleRequestDto.getRoleName());
         }
 
-        if(roleRequestDto.getUserId()!=0 &&user!=null) {
-            role.setUser(user);
+        if(roleRequestDto.getUserId()!=0 && User !=null) {
+            role.setUser(User);
         }
 
         Role updatedRole = roleRepository.save(role);

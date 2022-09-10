@@ -22,6 +22,8 @@ public class JBossEntityBase implements Serializable {
 
     protected Date modificationTime;
 
+
+    @Column(nullable = true)
     protected long modifierUserId;
 
 

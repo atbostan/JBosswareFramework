@@ -30,7 +30,7 @@ public class Role extends JBossEntityBase {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(User User) {
         this.user = user;
     }
 

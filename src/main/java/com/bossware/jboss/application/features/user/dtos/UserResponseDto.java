@@ -1,7 +1,5 @@
 package com.bossware.jboss.application.features.user.dtos;
 
-import com.bossware.jboss.domain.entities.User;
-
 import java.util.Date;
 import java.util.Objects;
 

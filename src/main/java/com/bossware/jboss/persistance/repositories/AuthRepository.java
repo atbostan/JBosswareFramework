@@ -4,7 +4,9 @@ import com.bossware.jboss.domain.entities.Auth;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AuthRepository extends PagingAndSortingRepository<Auth,Long> {
-    Auth[] findAllByRoleId(long id);
+    List<Auth> findAllByRoleId(long id);
 }

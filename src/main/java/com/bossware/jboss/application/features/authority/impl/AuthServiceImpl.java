@@ -1,4 +1,4 @@
-package com.bossware.jboss.application.features.user.impl;
+package com.bossware.jboss.application.features.authority.impl;
 
 import com.bossware.jboss.application.base.ServiceGenericBase;
 import com.bossware.jboss.application.features.authority.dtos.AuthRequestDto;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AuthServiceImp implements ServiceGenericBase<AuthRequestDto, AuthResponseDto> {
+public class AuthServiceImpl implements ServiceGenericBase<AuthRequestDto, AuthResponseDto> {
 
     AuthSourceDestinationMapper mapper = Mappers.getMapper(AuthSourceDestinationMapper.class);
 

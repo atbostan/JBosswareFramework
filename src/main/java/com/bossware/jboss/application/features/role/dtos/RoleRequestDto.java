@@ -1,7 +1,5 @@
 package com.bossware.jboss.application.features.role.dtos;
 
-import com.bossware.jboss.domain.entities.User;
-
 import java.util.Objects;
 
 public class RoleRequestDto {

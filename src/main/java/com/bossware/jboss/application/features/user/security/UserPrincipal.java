@@ -12,32 +12,37 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
 public class UserPrincipal implements UserDetails {
 
-    private User user;
+
+
+    private User UserEntity;
 
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
     private AuthRepository authRepository;
 
+    public UserPrincipal(User UserEntity) {
+        this.UserEntity = UserEntity;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
        
-        Role[] roles = roleRepository.findAllByUserId(user.getId());
+        List<Role> roles = roleRepository.findAllByUserId(UserEntity.getId());
         List<String> authNames = new ArrayList<>();
 
         if ( roles !=null ){
             for (Role role: roles) {
-                Auth[] authsByRole = authRepository.findAllByRoleId(role.getId());
-                authNames.add(Arrays.stream(authsByRole).map(a->a.getAuthName()).toString());
+                List<Auth> authsByRole = authRepository.findAllByRoleId(role.getId());
+                for (Auth auth:authsByRole) {
+                    authNames.add(auth.getAuthName());
+                }
             }
         }
 
@@ -52,12 +57,12 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return UserEntity.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUserName();
+        return UserEntity.getUserName();
     }
 
     @Override
@@ -67,7 +72,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return user.isNotLocked();
+        return UserEntity.isNotLocked();
     }
 
     @Override
@@ -77,6 +82,6 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.isActive();
+        return UserEntity.isActive();
     }
 }
