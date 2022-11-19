@@ -34,17 +34,17 @@ public class UserPrincipal implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
        
-        List<Role> roles = roleRepository.findAllByUserId(UserEntity.getId());
+//        List<Role> roles = roleRepository.findROlesByUserEmail(UserEntity.getEmail());
         List<String> authNames = new ArrayList<>();
 
-        if ( roles !=null ){
-            for (Role role: roles) {
-                List<Auth> authsByRole = authRepository.findAllByRoleId(role.getId());
-                for (Auth auth:authsByRole) {
-                    authNames.add(auth.getAuthName());
-                }
-            }
-        }
+//        if ( roles !=null ){
+//            for (Role role: roles) {
+//                List<Auth> authsByRole = authRepository.findAllByRoleId(role.getId());
+//                for (Auth auth:authsByRole) {
+//                    authNames.add(auth.getAuthName());
+//                }
+//            }
+//        }
 
         if (authNames!=null){
             return authNames.stream().map(SimpleGrantedAuthority::new ).collect(Collectors.toList());

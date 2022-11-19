@@ -8,14 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController extends JBossControllerBase {
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization",value = "Bearer JWT Token",paramType = "header")
-    })
-    @GetMapping
-    public String fun(){
-        return "heelo";
-    }
+
+
 }

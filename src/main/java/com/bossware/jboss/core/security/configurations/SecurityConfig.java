@@ -1,6 +1,7 @@
 package com.bossware.jboss.core.security.configurations;
 
 import com.bossware.jboss.core.security.constants.SecurityConstants;
+import com.bossware.jboss.core.security.filters.AuthenticationFilter;
 import com.bossware.jboss.core.security.filters.JWTAuthorizationFilter;
 import com.bossware.jboss.core.security.utils.JWTAccessDeniedHandler;
 import com.bossware.jboss.core.security.utils.JWTAuthEntryPoint;
@@ -20,8 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true,jsr250Enabled = true,securedEnabled = true)
+@EnableWebSecurity(debug = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -36,8 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JWTAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
-        return  new BCryptPasswordEncoder();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -51,21 +52,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         PasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().cors()
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()
                 .antMatchers(SecurityConstants.PUBLIC_URLS).permitAll()
                 .antMatchers(SecurityConstants.SWAGGER_URLS).permitAll()
-                .anyRequest().authenticated()
-                .and().exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler).authenticationEntryPoint(jwtAuthEntryPoint)
-                .and().addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
-
+                .anyRequest().authenticated().and().addFilter(getAuthenticationFilter())
         ;
 
     }
 
+    protected AuthenticationFilter getAuthenticationFilter() throws Exception {
+        final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
+        filter.setFilterProcessesUrl("/users/login");
+        return filter;
+    }
 }
 
 

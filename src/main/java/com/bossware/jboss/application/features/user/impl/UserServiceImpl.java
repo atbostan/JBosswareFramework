@@ -6,6 +6,7 @@ import com.bossware.jboss.application.features.user.dtos.UserRequestDto;
 import com.bossware.jboss.application.features.user.dtos.UserResponseDto;
 import com.bossware.jboss.application.features.user.security.UserPrincipal;
 import com.bossware.jboss.application.features.user.services.UserLoginAttemptService;
+import com.bossware.jboss.application.features.user.services.UserService;
 import com.bossware.jboss.core.mappers.UserSourceDestinationMapper;
 import com.bossware.jboss.domain.entities.User;
 import com.bossware.jboss.persistance.repositories.UserRepository;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Service
-public class UserServiceImp implements ServiceGenericBase<UserRequestDto , UserResponseDto>, UserDetailsService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     UserSourceDestinationMapper mapper = Mappers.getMapper(UserSourceDestinationMapper.class);
 
@@ -125,4 +126,17 @@ public class UserServiceImp implements ServiceGenericBase<UserRequestDto , UserR
             userLoginAttemptService.evict(User.getUserName());
         }
     }
+
+
+    @Override
+    public ResponseEntity<UserResponseDto> findUserByUserName(String userName) {
+        User user = userRepository.findUserByUserName(userName);
+        UserResponseDto res = mapper.entityToResp(user);
+        return  new ResponseEntity<>(res,HttpStatus.OK);    }
+
+    @Override
+    public ResponseEntity<UserResponseDto> findUserByUserEmail(String email) {
+        User user = userRepository.findUserByUserName(email);
+        UserResponseDto res = mapper.entityToResp(user);
+        return  new ResponseEntity<>(res,HttpStatus.OK);       }
 }
