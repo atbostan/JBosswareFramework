@@ -29,21 +29,15 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
 
-
     public AuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
 
     }
-
-
-
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res) throws AuthenticationException {
 
         try {
-
-
             UserLoginRequest creds = new ObjectMapper()
                     .readValue(req.getInputStream(), UserLoginRequest.class);
 
@@ -67,14 +61,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             Authentication auth) throws IOException, ServletException {
 
         UserPrincipal principal =(UserPrincipal) auth.getPrincipal();
-        String userName = principal.getUsername();
-
-//        String token = generateJWTToken(principal);
-//        UserService userService = (UserService)SpringApplicationContext.getBean("userServiceImpl");
-//        UserDto userDto = userService.getUser(userName);
-//
-//        res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-//        res.addHeader("UserID", userDto.getUserId());
+        String token = generateJWTToken(principal);
+        res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
 
     }
 
@@ -88,7 +76,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .withIssuedAt(new Date())
                 .withSubject(userPrincipal.getUsername())
                 .withArrayClaim(SecurityConstants.AUTHORITIES,claims)
-                //.withExpiresAt(new Date(System.currentTimeMillis()+expirationTime))
+                .withExpiresAt(new Date(System.currentTimeMillis()+SecurityConstants.TOKEN_EXPIRE_TIME))
                 .sign(Algorithm.HMAC512("secret"));
     }
 

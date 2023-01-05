@@ -1,7 +1,8 @@
 package com.bossware.jboss.core.security.constants;
 
 public class SecurityConstants {
-    public static final String[] PUBLIC_URLS = {"/role"};
+    public static final String[] PUBLIC_URLS = {"/roles"};
+    public static final String SIGN_UP_URLS = "/users";
     public static final String[] SWAGGER_URLS = {"/v2/api-docs","/configuration/**","/swagger*/**","/webjars/**"};
 
     public static final String ISSUER = "JBoss Framework";
@@ -16,6 +17,9 @@ public class SecurityConstants {
 
     public static final String TOKEN_PREFIX = "Bearer ";
 
+    public static final String HEADER_STRING = "Authorization";
+
+    public static final long TOKEN_EXPIRE_TIME = 84000000;
 
 
 

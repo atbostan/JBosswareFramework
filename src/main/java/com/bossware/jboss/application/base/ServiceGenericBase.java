@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface ServiceGenericBase<P,R> {
-    ResponseEntity<R> create(P p);
+    ResponseEntity<R> create(P p) throws Exception;
 
     ResponseEntity<R> getEntityById(long id);
 

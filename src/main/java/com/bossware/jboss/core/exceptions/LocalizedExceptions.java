@@ -19,4 +19,9 @@ public class LocalizedExceptions extends  Exception{
     public String getLocalizedMessage() {
         return ExceptionMessageBundler.getMessageForLocale(messageKey, locale);
     }
+
+    @Override
+    public String getMessage(){
+        return messageKey;
+    }
 }

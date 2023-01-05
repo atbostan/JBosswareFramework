@@ -18,8 +18,10 @@ public class JBossEntityBase implements Serializable {
     @Column(nullable = false)
     protected Date creationTime;
 
+    @Column(nullable = true)
     protected long creatorUserId;
 
+    @Column(nullable = true)
     protected Date modificationTime;
 
 
@@ -55,8 +57,8 @@ public class JBossEntityBase implements Serializable {
         return modificationTime;
     }
 
-    public void setModificationTime(Date modificationTime) {
-        this.modificationTime = modificationTime;
+    public void setModificationTime() {
+        this.modificationTime = new Date();
     }
 
     public long getModifierUserId() {

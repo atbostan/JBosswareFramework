@@ -27,6 +27,7 @@ public class UserMessages {
     //region User Data Exceptions
 
     public static final String USER_NOT_FOUND = "User not found by specified information by given you";
+    public static final String USER_ALREADY_EXIST = "This user is already exist";
     //endregion
 
 

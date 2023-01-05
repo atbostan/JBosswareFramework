@@ -4,6 +4,8 @@ import com.bossware.jboss.application.base.ServiceGenericBase;
 import com.bossware.jboss.application.features.user.constants.UserMessages;
 import com.bossware.jboss.application.features.user.dtos.UserRequestDto;
 import com.bossware.jboss.application.features.user.dtos.UserResponseDto;
+import com.bossware.jboss.application.features.user.exceptions.EmailExistException;
+import com.bossware.jboss.application.features.user.exceptions.UserNameExistException;
 import com.bossware.jboss.application.features.user.security.UserPrincipal;
 import com.bossware.jboss.application.features.user.services.UserLoginAttemptService;
 import com.bossware.jboss.application.features.user.services.UserService;
@@ -19,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -34,14 +37,26 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     UserRepository userRepository;
 
     @Autowired
+    BCryptPasswordEncoder encoder;
+    @Autowired
     UserLoginAttemptService userLoginAttemptService;
     @Override
-    public ResponseEntity<UserResponseDto> create(UserRequestDto userRequestDto) {
-        User User = mapper.reqToEntity(userRequestDto);
-        User createdUser = userRepository.save(User);
+    public ResponseEntity<UserResponseDto> create(UserRequestDto userRequestDto) throws Exception {
+        User userExistRecord = userRepository.findUserByEmail(userRequestDto.getEmail());
+        if(userExistRecord!=null){
+            throw new EmailExistException(UserMessages.USER_ALREADY_EXIST);
+        }
+        String pass = userRequestDto.getPassword();
+        userRequestDto.setPassword(encoder.encode(pass));
+        User user = mapper.reqToEntity(userRequestDto);
+        user.setCreationTime();
+        user.setActive(true);
+        user.setNotLocked(true);
+        User createdUser = userRepository.save(user);
         UserResponseDto res = mapper.entityToResp(createdUser);
         return new ResponseEntity<>(res, HttpStatus.CREATED);
     }
+
 
     @Override
     public ResponseEntity<UserResponseDto> getEntityById(long id) {
@@ -52,23 +67,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public ResponseEntity<UserResponseDto> update(long id, UserRequestDto userRequestDto) {
-        User User = userRepository.findById(id).get();
+        User user = userRepository.findById(id).get();
         if(userRequestDto.getUserName()!=null) {
-            User.setUserName(userRequestDto.getUserName());
+            user.setUserName(userRequestDto.getUserName());
         }
         if(userRequestDto.getEmail()!=null) {
-            User.setEmail(userRequestDto.getEmail());
+            user.setEmail(userRequestDto.getEmail());
         }
         if(userRequestDto.getName()!=null) {
-            User.setName(userRequestDto.getName());
+            user.setName(userRequestDto.getName());
         }
         if(userRequestDto.getLastName()!=null) {
-            User.setLastName(userRequestDto.getLastName());
+            user.setLastName(userRequestDto.getLastName());
         }
         if(userRequestDto.getPassword()!=null) {
-            User.setPassword(userRequestDto.getPassword());
+            user.setPassword(userRequestDto.getPassword());
         }
-        User updatedUser = userRepository.save(User);
+        user.setModificationTime();
+        User updatedUser = userRepository.save(user);
         UserResponseDto res = mapper.entityToResp(updatedUser);
         return  new ResponseEntity<>(res,HttpStatus.OK);
     }

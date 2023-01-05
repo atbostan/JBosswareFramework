@@ -6,28 +6,28 @@ import com.bossware.jboss.core.security.filters.JWTAuthorizationFilter;
 import com.bossware.jboss.core.security.utils.JWTAccessDeniedHandler;
 import com.bossware.jboss.core.security.utils.JWTAuthEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true, securedEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
 
+    private final UserDetailsService userDetailsService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private JWTAuthorizationFilter jwtAuthorizationFilter;
 
@@ -36,41 +36,43 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JWTAccessDeniedHandler jwtAccessDeniedHandler;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public SecurityConfig(@Qualifier("userServiceImpl")UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userDetailsService = userDetailsService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        PasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    @Bean
+    protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
+
+        //For defined userDetailService and password encoder
+        AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
-    }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+        //For build authentication manager
+        AuthenticationManager authenticationManager = auth.build();
+        http.authenticationManager(authenticationManager);
+
+        //For define filter chain
         http.csrf().disable().cors()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()
+                .antMatchers(HttpMethod.POST,SecurityConstants.SIGN_UP_URLS).permitAll()
                 .antMatchers(SecurityConstants.PUBLIC_URLS).permitAll()
                 .antMatchers(SecurityConstants.SWAGGER_URLS).permitAll()
-                .anyRequest().authenticated().and().addFilter(getAuthenticationFilter())
+                .anyRequest().authenticated()
+                .and().addFilter(new AuthenticationFilter(authenticationManager))/*.and().addFilter(getAuthenticationFilter())*/
         ;
 
+        return http.build();
+
     }
 
-    protected AuthenticationFilter getAuthenticationFilter() throws Exception {
-        final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
-        filter.setFilterProcessesUrl("/users/login");
-        return filter;
-    }
+//    protected AuthenticationFilter getAuthenticationFilter() throws Exception {
+//        final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
+//        return filter;
+//    }
 }
 
 

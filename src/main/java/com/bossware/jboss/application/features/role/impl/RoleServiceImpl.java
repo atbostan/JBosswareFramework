@@ -31,7 +31,7 @@ public class RoleServiceImpl implements RoleService {
     UserRepository userRepository;
 
     @Override
-    public ResponseEntity<RoleResponseDto> create(RoleRequestDto roleRequestDto) {
+    public ResponseEntity<RoleResponseDto> create(RoleRequestDto roleRequestDto) throws Exception {
         Role role = mapper.reqToEntity(roleRequestDto);
         Role createdRole = roleRepository.save(role);
         RoleResponseDto res = mapper.entityToResp(createdRole);

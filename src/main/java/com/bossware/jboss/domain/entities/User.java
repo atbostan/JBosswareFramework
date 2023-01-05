@@ -22,7 +22,7 @@ public class User extends JBossEntityBase {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false,length = 120)
+    @Column(nullable = false,length = 120 )
     private String email;
     private Date lastLoginDate;
     private Date lastLoginDateDisplay;

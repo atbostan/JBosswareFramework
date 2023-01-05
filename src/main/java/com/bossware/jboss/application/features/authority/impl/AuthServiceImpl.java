@@ -29,7 +29,7 @@ public class AuthServiceImpl implements ServiceGenericBase<AuthRequestDto, AuthR
     RoleRepository roleRepository;
 
     @Override
-    public ResponseEntity<AuthResponseDto> create(AuthRequestDto authRequestDto) {
+    public ResponseEntity<AuthResponseDto> create(AuthRequestDto authRequestDto) throws Exception {
         Auth auth = mapper.reqToEntity(authRequestDto);
         Auth createdAuth = authRepository.save(auth);
         AuthResponseDto res = mapper.entityToResp(createdAuth);
